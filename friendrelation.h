@@ -11,7 +11,11 @@ public:
     QVector<QString> getFriendList(const QString& userName);
     bool addFriendRelation(const QString& userName1, const QString& userName2);
     bool areFriends(const QString& userName1, const QString& userName2);
+    void storeLocal();
 
+    QMap<QString, QVector<QString>> friendList;
+    QMap<QString, QVector<QString>> friendRequest;
+    
 };
 
 #endif // FRIENDRELATION_H
