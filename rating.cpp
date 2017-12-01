@@ -19,6 +19,11 @@ Rating::Rating()
   }
 }
 
+Rating::~Rating()
+{
+  storeLocal();
+}
+
 void Rating::storeLocal()
 {
   QFile fileRatingFile("filereputations");

@@ -6,13 +6,14 @@
 #include <QFile>
 #include <QDataStream>
 #include <QSet>
-
+#include <QDebug>
 
 class FriendRelation: public QObject
 {
     Q_OBJECT
 public:
     FriendRelation(QObject *parent = 0);
+    ~FriendRelation();
     QSet<QString> getFriendList(const QString& userName);
     bool addFriendRelation(const QString& userName1, const QString& userName2);
     bool areFriends(const QString& userName1, const QString& userName2);

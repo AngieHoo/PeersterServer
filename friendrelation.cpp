@@ -6,18 +6,33 @@ FriendRelation::FriendRelation(QObject *parent)
   QFile requests("friendrequests");
   if(requests.open(QIODevice::ReadOnly)) 
   {
+    qDebug()<<"friendrqeusts file exists, reading input";
     QDataStream requestsIn(&requests);
     requestsIn >> friendRequest;
     requests.close();
+  }
+  else
+  {
+    qDebug()<<"friendrequests file do not exist";
   }
 
   QFile lists("friendlists");
   if (lists.open(QIODevice::ReadOnly))
   {
+    qDebug()<<"friendlists file exists, reading input";
     QDataStream listsIn(&lists);
     listsIn >> friendList;
     lists.close();
   }
+  else
+  {
+    qDebug()<<"friendlists file does not exist";
+  }
+}
+
+FriendRelation::~FriendRelation()
+{
+  storeLocal();
 }
 
 QSet<QString> FriendRelation::getFriendList(const QString &userName)

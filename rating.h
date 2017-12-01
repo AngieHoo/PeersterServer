@@ -12,6 +12,7 @@ class Rating: public QObject
     Q_OBJECT
 public:
     Rating();
+    ~Rating();
     void storeLocal();
     bool hasRating(const QString&userName, const QString& fileID);
     double getUserRating(const QString&userName, const QString& fileID);
