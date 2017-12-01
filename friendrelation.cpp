@@ -6,8 +6,8 @@ FriendRelation::FriendRelation(QObject *parent)
   QFile requests("friendrequests");
   if(requests.open(QIODevice::ReadOnly)) 
   {
-    QDataStream reqeustsIn(&requests);
-    reqeustIn >> friendRequest;
+    QDataStream requestsIn(&requests);
+    requestsIn >> friendRequest;
     requests.close();
   }
 
@@ -15,12 +15,12 @@ FriendRelation::FriendRelation(QObject *parent)
   if (lists.open(QIODevice::ReadOnly))
   {
     QDataStream listsIn(&lists);
-    listsIn >> freiendList;
+    listsIn >> friendList;
     lists.close();
   }
 }
 
-QVector<QString> FriendRelation::getFriendList(const QString &userName)
+QSet<QString> FriendRelation::getFriendList(const QString &userName)
 {
     return friendList.value(userName);
 }
@@ -30,36 +30,36 @@ bool FriendRelation::addFriendRelation(const QString &userName1, const QString &
   QString tmp1 = userName1.compare(userName2, Qt::CaseInsensitive) < 0 ? userName1 : userName2;
   QString tmp2 = userName1.compare(userName2, Qt::CaseInsensitive) < 0 ? userName2 : userName1;
 //Comparing the names so request are always in alphabetical order, so we don't need to check existence of request key twice
-  if (frienRequest.contains(tmp1)
+  if (friendRequest.contains(tmp1))
     {
-      if (frienRequest.value(tmp1).contains(tmp2)) 
+      if (friendRequest.value(tmp1).contains(tmp2)) 
       {//there is a request between same two users, add them to friend list of each other
-        friendRequest.value(tmp1).remove(tmp2);
-        if (frienduest.value(tmp1).empty()) {
-          friendRequest.remvoe(tmp1);
+        friendRequest[tmp1].remove(tmp2);
+        if (friendRequest.value(tmp1).empty()) {
+          friendRequest.remove(tmp1);
         }
         
         if (friendList.contains(tmp1) && 
             !friendList.value(tmp1).contains(tmp2)) 
         {
-          friendList.value(tmp1).append(tmp2);
+          friendList[tmp1].insert(tmp2);
         } 
         else if (!friendList.contains(tmp1)) 
         {
-          QVector<QString> v;
-          v.append(tmp2);
+          QSet<QString> v;
+          v.insert(tmp2);
           friendList.insert(tmp1, v);
         }
 
         if (friendList.contains(tmp2) && 
             !friendList.value(tmp2).contains(tmp1)) 
         {
-          friendList.value(tmp2).append(tmp1);
+          friendList[tmp2].insert(tmp1);
         } 
         else if (!friendList.contains(tmp2)) 
         {
-          QVector<QString> v;
-          v.append(tmp1);
+          QSet<QString> v;
+          v.insert(tmp1);
           friendList.insert(tmp2, v);
         }
 
@@ -67,15 +67,15 @@ bool FriendRelation::addFriendRelation(const QString &userName1, const QString &
       }
       else
       {
-        friendRequest.vlaue(tmp1).insert(tmp2);
+        friendRequest[tmp1].insert(tmp2);
         return false;
       }
   
     }
   else 
     {
-      QVector<QString> v;
-      v.append(tmp2);
+      QSet<QString> v;
+      v.insert(tmp2);
       friendRequest.insert(tmp1, v);
       return false;
     }
@@ -90,14 +90,14 @@ bool FriendRelation::areFriends(const QString &userName1, const QString &userNam
 void FriendRelation::storeLocal()
 {
   QFile requests("friendrequests");
-  rquests.open(QIODevice::WriteOnly);
+  requests.open(QIODevice::WriteOnly);
   QDataStream requestsOut(&requests);
-  out << friendRequest;
+  requestsOut << friendRequest;
   requests.close();
 
   QFile lists("friendlists");
   lists.open(QIODevice::WriteOnly);
   QDataStream listsOut(&lists);
-  out << friendList;
+  listsOut << friendList;
   lists.close();
 }

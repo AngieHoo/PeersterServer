@@ -2,19 +2,24 @@
 #define FRIENDRELATION_H
 #include <QObject>
 #include <QVector>
+#include <QMap>
+#include <QFile>
+#include <QDataStream>
+#include <QSet>
+
 
 class FriendRelation: public QObject
 {
     Q_OBJECT
 public:
     FriendRelation(QObject *parent = 0);
-    QVector<QString> getFriendList(const QString& userName);
+    QSet<QString> getFriendList(const QString& userName);
     bool addFriendRelation(const QString& userName1, const QString& userName2);
     bool areFriends(const QString& userName1, const QString& userName2);
     void storeLocal();
 
-    QMap<QString, QVector<QString>> friendList;
-    QMap<QString, QVector<QString>> friendRequest;
+    QMap<QString, QSet<QString>> friendList;
+    QMap<QString, QSet<QString>> friendRequest;
     
 };
 
